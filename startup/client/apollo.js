@@ -1,13 +1,12 @@
 /* eslint-disable no-underscore-dangle */
 
 import { Meteor } from 'meteor/meteor';
-import { Accounts } from 'meteor/accounts-base';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
-import { WebSocketLink } from 'apollo-link-ws';
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
+// import { WebSocketLink } from 'apollo-link-ws';
+// import { createPersistedQueryLink } from 'apollo-link-persisted-queries';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { MeteorAccountsLink } from 'meteor/apollo';
@@ -29,11 +28,14 @@ const queryOrMutationLink = () =>
     credentials: 'same-origin',
   });
 
+// Disabling subscriptionLink for now
+/*
 const subscriptionLink = () =>
   new WebSocketLink({
     uri: Meteor.settings.public.graphQL.wsUri,
     options: { reconnect: true },
   });
+*/
 
 const apolloClient = new ApolloClient({
   connectToDevTools: true,
@@ -47,7 +49,8 @@ const apolloClient = new ApolloClient({
         const { kind, operation } = getMainDefinition(query);
         return kind === 'OperationDefinition' && operation === 'subscription';
       },
-      subscriptionLink(),
+      // Disabling subscriptionLink for now
+      // subscriptionLink(),
       queryOrMutationLink(),
     ),
   ]),

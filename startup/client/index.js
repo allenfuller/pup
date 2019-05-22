@@ -8,6 +8,7 @@ import { ApolloProvider } from 'react-apollo';
 import { Accounts } from 'meteor/accounts-base';
 import { Meteor } from 'meteor/meteor';
 import { Bert } from 'meteor/themeteorchef:bert';
+
 import App from '../../ui/layouts/App';
 import apolloClient from './apollo';
 import GlobalStyle from './GlobalStyle';

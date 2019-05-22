@@ -1,19 +1,26 @@
-import pupql from '@cleverbeagle/pupql';
+import { ApolloServer } from 'apollo-server-express';
 import { WebApp } from 'meteor/webapp';
 import { getUser } from 'meteor/apollo';
+
 import schema from './api';
 
-pupql({
-  schema,
-  databases: {
-    mongodb: {
-      connectionString: process.env.MONGO_URL,
-    },
-  },
+const { typeDefs, resolvers } = schema;
+
+const apolloServer = new ApolloServer({
+  typeDefs,
+  resolvers,
   context: async ({ req }) => ({
     user: await getUser(req.headers.authorization),
   }),
-  config: {
-    existingWebServer: WebApp.connectHandlers,
-  },
+});
+
+apolloServer.applyMiddleware({
+  app: WebApp.connectHandlers,
+  path: '/graphql',
+});
+
+WebApp.connectHandlers.use('/graphql', (req, res) => {
+  if (req.method === 'GET') {
+    res.end();
+  }
 });
